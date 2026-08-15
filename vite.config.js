@@ -10,6 +10,7 @@ export default defineConfig({
     strictPort: false,
     allowedHosts: [
       'tynisha-thermophosphorescent-vennie.ngrok-free.dev',
+      'undated-giveaway-womankind.ngrok-free.dev',
       '.ngrok-free.dev',
       '.ngrok.app',
       '.ngrok.io',
