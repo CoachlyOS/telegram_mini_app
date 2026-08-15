@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Users, Calendar, CalendarX, History, Package } from 'lucide-react'
+import { Users, Calendar, CalendarX, History, Package, User } from 'lucide-react'
 import LanguageSelector from '../../../components/LanguageSelector'
 import logo from '../../../assets/logo.png'
 import './ProfessionalDashboard.css'
@@ -13,6 +13,7 @@ interface ProfessionalDashboardProps {
   onViewPreviousAppointments: () => void
   onCreateGroupVisit: () => void
   onViewPackages: () => void
+  onViewProfile: () => void
   onLocaleChange?: (locale: string) => Promise<void>
 }
 
@@ -24,6 +25,7 @@ export default function ProfessionalDashboard({
   onViewPreviousAppointments,
   onCreateGroupVisit,
   onViewPackages,
+  onViewProfile,
   onLocaleChange
 }: ProfessionalDashboardProps) {
   const { t } = useTranslation()
@@ -78,6 +80,13 @@ export default function ProfessionalDashboard({
             >
               <Package size={20} />
               {t('professional.dashboard.packages')}
+            </button>
+            <button
+              className="btn btn-secondary btn-large"
+              onClick={onViewProfile}
+            >
+              <User size={20} />
+              {t('professional.dashboard.profile')}
             </button>
           </div>
         </div>

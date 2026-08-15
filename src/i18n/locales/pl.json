@@ -215,7 +215,8 @@
       "timetable": "Harmonogram",
       "previousAppointments": "Historia wizyt",
       "createGroupVisit": "Utwórz wizytę grupową",
-      "packages": "Pakiety"
+      "packages": "Pakiety",
+      "profile": "Profil"
     },
     "appointments": {
       "title": "Moje wizyty",
@@ -373,6 +374,19 @@
       "loadingDetails": "Ładowanie szczegółów pakietu...",
       "appointmentsList": "Lista wizyt",
       "noAppointmentsInPackage": "Brak wizyt w tym pakiecie"
+    },
+    "profile": {
+      "title": "Profil profesjonalisty",
+      "loading": "Ładowanie profilu...",
+      "save": "Zapisz preferencje",
+      "saving": "Zapisywanie...",
+      "preferredWorkingHours": "Preferowane godziny pracy",
+      "startTime": "Początek dnia pracy",
+      "endTime": "Koniec dnia pracy",
+      "helpText": "Te godziny są używane jako preferowany zakres pracy.",
+      "noData": "Brak danych profilu.",
+      "saveSuccess": "Preferencje profilu zapisane pomyślnie.",
+      "saveError": "Nie udało się zapisać preferencji profilu."
     },
     "editPreviousAppointment": {
       "title": "Edytuj poprzednią wizytę",

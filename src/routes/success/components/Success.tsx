@@ -13,7 +13,7 @@ export default function Success({ user, onNavigate }: SuccessProps) {
   // If user is client, navigate to dashboard
   React.useEffect(() => {
     if (user?.role === 'client') {
-      onNavigate(Routes.CLIENT_DASHBOARD)
+      onNavigate('/client/dashboard')
     }
   }, [user, onNavigate])
 

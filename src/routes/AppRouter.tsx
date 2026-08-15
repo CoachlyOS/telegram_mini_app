@@ -26,6 +26,7 @@ import TimetableRoute from './_signedin_professional.timetable.$date/route'
 import SelectClientRoute from './_signedin_professional.previous-appointments.select-client/route'
 import PreviousAppointmentsRoute from './_signedin_professional.previous-appointments/route'
 import PackagesRoute from './_signedin_professional.packages/route'
+import ProfileRoute from './_signedin_professional.profile/route'
 
 declare global {
   interface Window {
@@ -216,6 +217,7 @@ function AppRouterContent() {
       <Route path="/professional/previous-appointments/select-client" element={<SelectClientRoute />} />
       <Route path="/professional/previous-appointments" element={<PreviousAppointmentsRoute />} />
       <Route path="/professional/packages" element={<PackagesRoute />} />
+      <Route path="/professional/profile" element={<ProfileRoute />} />
       
       {/* Default redirect */}
       <Route path="/" element={<Navigate to="/loading" replace />} />

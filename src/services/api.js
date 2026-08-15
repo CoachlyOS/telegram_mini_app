@@ -311,6 +311,19 @@ class ApiService {
     return this.request(`/professionals/subscriptions`)
   }
 
+  // Get professional profile preferences
+  async getProfessionalProfile() {
+    return this.request('/professionals/profile')
+  }
+
+  // Update professional profile preferences
+  async updateProfessionalProfile(profileData) {
+    return this.request('/professionals/profile', {
+      method: 'PATCH',
+      body: JSON.stringify(profileData),
+    })
+  }
+
   // Get client invites
   async getClientInvites() {
     return this.request(`/clients/invites`)

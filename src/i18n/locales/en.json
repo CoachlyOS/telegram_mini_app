@@ -211,7 +211,8 @@
       "timetable": "Timetable",
       "previousAppointments": "Appointments history",
       "createGroupVisit": "Create Group Visit",
-      "packages": "Packages"
+      "packages": "Packages",
+      "profile": "Profile"
     },
     "appointments": {
       "title": "My Appointments",
@@ -369,6 +370,19 @@
       "loadingDetails": "Loading package details...",
       "appointmentsList": "Appointments list",
       "noAppointmentsInPackage": "No appointments in this package yet"
+    },
+    "profile": {
+      "title": "Professional Profile",
+      "loading": "Loading profile...",
+      "save": "Save preferences",
+      "saving": "Saving...",
+      "preferredWorkingHours": "Preferred working hours",
+      "startTime": "Start of working day",
+      "endTime": "End of working day",
+      "helpText": "These times are used as your preferred daily working window.",
+      "noData": "No profile data available yet.",
+      "saveSuccess": "Profile preferences saved successfully.",
+      "saveError": "Failed to save profile preferences."
     },
     "editPreviousAppointment": {
       "title": "Edit Previous Appointment",
