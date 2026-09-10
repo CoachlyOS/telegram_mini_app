@@ -1,15 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Loader2, AlertCircle, User, Calendar, Hash } from 'lucide-react'
-import { apiService } from '../../../services/api'
-
-interface Subscription {
-  id: string
-  first_name: string
-  last_name: string
-  chat_id?: number | null
-  locale: string
-}
+import { Loader2, AlertCircle, User, Calendar, Hash, Search } from 'lucide-react'
+import { useClients, Client } from '../../../hooks/professionals/useClients'
 
 interface CreatePackageModalProps {
   professionalID: string
@@ -26,33 +18,15 @@ export default function CreatePackageModal({
 }: CreatePackageModalProps) {
   const { t } = useTranslation()
 
-  const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
-  const [loadingSubscriptions, setLoadingSubscriptions] = useState(true)
-  const [subscriptionsError, setSubscriptionsError] = useState<string | null>(null)
+  const { clients, loading: clientsLoading, error: clientsError, searchClients } = useClients()
+  const [clientSearch, setClientSearch] = useState('')
 
-  const [selectedClient, setSelectedClient] = useState<Subscription | null>(null)
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const [issuedAt, setIssuedAt] = useState('')
   const [expiresAt, setExpiresAt] = useState('')
   const [appointmentsNumber, setAppointmentsNumber] = useState<number>(1)
   const [creating, setCreating] = useState(false)
   const [createError, setCreateError] = useState<string | null>(null)
-
-  // Load subscriptions on mount
-  useEffect(() => {
-    const loadSubscriptions = async () => {
-      setLoadingSubscriptions(true)
-      setSubscriptionsError(null)
-      try {
-        const data = await apiService.getProfessionalSubscriptions() as { subscriptions: Subscription[] }
-        setSubscriptions(data.subscriptions || [])
-      } catch (err: any) {
-        setSubscriptionsError(err.message || t('error.loadClientsFailed'))
-      } finally {
-        setLoadingSubscriptions(false)
-      }
-    }
-    loadSubscriptions()
-  }, [t])
 
   // Set default dates
   useEffect(() => {
@@ -116,21 +90,32 @@ export default function CreatePackageModal({
             <User size={16} />
             {t('professional.packages.selectClient')}
           </label>
-          {loadingSubscriptions ? (
+          {clientsLoading ? (
             <div className="packages-status-inline">
               <Loader2 size={18} className="spinner" />
               <span>{t('common.loading')}</span>
             </div>
-          ) : subscriptionsError ? (
+          ) : clientsError ? (
             <div className="packages-status-inline packages-error-inline">
               <AlertCircle size={18} />
-              <span>{subscriptionsError}</span>
+              <span>{clientsError}</span>
             </div>
-          ) : subscriptions.length === 0 ? (
+          ) : clients.length === 0 ? (
             <p className="no-data-text">{t('professional.packages.noClients')}</p>
           ) : (
             <div className="client-selector">
-              {subscriptions.map((sub) => (
+              <div className="client-search">
+                <Search size={16} />
+                <input
+                  type="text"
+                  className="client-search-input"
+                  value={clientSearch}
+                  onChange={(e) => setClientSearch(e.target.value)}
+                  placeholder={t('professional.packages.searchClients')}
+                  disabled={creating}
+                />
+              </div>
+              {searchClients(clientSearch).map((sub) => (
                 <button
                   key={sub.id}
                   className={`client-option ${selectedClient?.id === sub.id ? 'selected' : ''}`}

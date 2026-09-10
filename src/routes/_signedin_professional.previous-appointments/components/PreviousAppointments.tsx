@@ -5,9 +5,8 @@ import { ChevronLeft, ChevronRight, Loader2, AlertCircle, Calendar as CalendarIc
 import { usePreviousAppointments } from '../hooks/usePreviousAppointments'
 import { useCancelProfessionalAppointment } from '../../../hooks/professionals/useCancelProfessionalAppointment'
 import { useUpdatePreviousAppointment } from '../../../hooks/professionals/useUpdatePreviousAppointment'
-import { useMissingClients, MissingClient } from '../../../hooks/professionals/useMissingClients'
+import { useClients, Client } from '../../../hooks/professionals/useClients'
 import { useAppointmentDetails, AppointmentDetails } from '../hooks/useAppointmentDetails'
-import { useProfessionalSubscriptions, ProfessionalSubscription } from '../../_signedin_professional.previous-appointments.select-client/hooks/useProfessionalSubscriptions'
 import { formatDate, formatTime } from '../../../utils/i18n'
 import 'react-calendar/dist/Calendar.css'
 import './PreviousAppointments.css'
@@ -43,10 +42,9 @@ export default function PreviousAppointments({ onBack }: PreviousAppointmentsPro
     dateFromStr,
     dateToStr
   )
-  const { subscriptions } = useProfessionalSubscriptions()
+  const { clients, loading: clientsLoading, error: clientsError, searchClients } = useClients()
   const { cancelAppointment, canceling, error: cancelError } = useCancelProfessionalAppointment()
   const { updatePreviousAppointment, updating, error: updateError } = useUpdatePreviousAppointment()
-  const { getMissingClients, loading: missingClientsLoading } = useMissingClients()
   const { getAppointmentDetails, loading: detailsLoading } = useAppointmentDetails()
 
   // Modal state
@@ -58,11 +56,17 @@ export default function PreviousAppointments({ onBack }: PreviousAppointmentsPro
 
   // Edit mode state
   const [isEditMode, setIsEditMode] = useState(false)
-  const [missingClients, setMissingClients] = useState<MissingClient[]>([])
+  const [addClientSearch, setAddClientSearch] = useState('')
   const [clientsToAdd, setClientsToAdd] = useState<Set<string>>(new Set())
   const [clientsToRemove, setClientsToRemove] = useState<Set<string>>(new Set())
   const [typeSuggestionDismissed, setTypeSuggestionDismissed] = useState(false)
   const [typeSuggestionAccepted, setTypeSuggestionAccepted] = useState(false)
+
+  // Clients available to add in edit mode: full list minus those already on the
+  // appointment (from appointmentDetails.clients), filtered by the search input.
+  // Backend no longer returns a scoped "missing clients" list — it returns everyone.
+  const existingClientIDs = new Set(appointmentDetails?.clients?.map((c) => c.id) || [])
+  const addableClients = searchClients(addClientSearch).filter((c) => !existingClientIDs.has(c.id))
 
   // Close calendar on outside click
   useEffect(() => {
@@ -142,7 +146,6 @@ export default function PreviousAppointments({ onBack }: PreviousAppointmentsPro
     setSelectedAppointmentID(null)
     setAppointmentDetails(null)
     setIsEditMode(false)
-    setMissingClients([])
     setClientsToAdd(new Set())
     setClientsToRemove(new Set())
     setTypeSuggestionDismissed(false)
@@ -168,12 +171,9 @@ export default function PreviousAppointments({ onBack }: PreviousAppointmentsPro
     setIsEditMode(true)
     setClientsToAdd(new Set())
     setClientsToRemove(new Set())
+    setAddClientSearch('')
     setTypeSuggestionDismissed(false)
     setTypeSuggestionAccepted(false)
-
-    const clients = await getMissingClients(selectedAppointmentID)
-    console.log('clients', clients)
-    setMissingClients(clients)
   }
 
   const handleAcceptTypeSuggestion = () => {
@@ -222,7 +222,6 @@ export default function PreviousAppointments({ onBack }: PreviousAppointmentsPro
       setIsEditMode(false)
       setClientsToAdd(new Set())
       setClientsToRemove(new Set())
-      setMissingClients([])
       await refetch()
     } catch {
       // Error is handled by the hook
@@ -233,7 +232,6 @@ export default function PreviousAppointments({ onBack }: PreviousAppointmentsPro
     setIsEditMode(false)
     setClientsToAdd(new Set())
     setClientsToRemove(new Set())
-    setMissingClients([])
     setTypeSuggestionDismissed(false)
     setTypeSuggestionAccepted(false)
   }
@@ -404,7 +402,7 @@ export default function PreviousAppointments({ onBack }: PreviousAppointmentsPro
                 onChange={(e) => setSelectedClientID(e.target.value || null)}
               >
                 <option value="">{t('professional.previousAppointments.filters.allClients')}</option>
-                {subscriptions.map((sub: ProfessionalSubscription) => (
+                {clients.map((sub: Client) => (
                   <option key={sub.id} value={sub.id}>
                     {sub.first_name} {sub.last_name}
                   </option>
@@ -646,31 +644,43 @@ export default function PreviousAppointments({ onBack }: PreviousAppointmentsPro
                     </>
                   )}
 
-                  {/* Edit mode: add missing clients */}
+                  {/* Edit mode: add clients */}
                   {isEditMode && (
                     <>
                       <div className="edit-section-label">
                         <UserPlus size={16} />
                         {t('professional.editPreviousAppointment.addClients')}
                       </div>
-                      {missingClientsLoading ? (
-                        <p className="loading">{t('professional.editPreviousAppointment.loadingMissingClients')}</p>
-                      ) : missingClients.length === 0 ? (
-                        <p className="modal-subtitle">{t('professional.editPreviousAppointment.noMissingClients')}</p>
+                      {clientsLoading ? (
+                        <p className="loading">{t('common.loading')}</p>
+                      ) : addableClients.length === 0 ? (
+                        <p className="modal-subtitle">{t('professional.editPreviousAppointment.noClientsToAdd')}</p>
                       ) : (
-                        <div className="modal-clients-selector">
-                          {missingClients.map((client) => (
-                            <label key={client.id} className="modal-checkbox-label">
-                              <input
-                                type="checkbox"
-                                checked={clientsToAdd.has(client.id)}
-                                onChange={() => handleAddClientToggle(client.id)}
-                                disabled={updating}
-                              />
-                              {client.first_name} {client.last_name}
-                            </label>
-                          ))}
-                        </div>
+                        <>
+                          <div className="modal-client-search">
+                            <input
+                              type="text"
+                              className="modal-client-search-input"
+                              value={addClientSearch}
+                              onChange={(e) => setAddClientSearch(e.target.value)}
+                              placeholder={t('professional.editPreviousAppointment.searchClients')}
+                              disabled={updating}
+                            />
+                          </div>
+                          <div className="modal-clients-selector">
+                            {addableClients.map((client) => (
+                              <label key={client.id} className="modal-checkbox-label">
+                                <input
+                                  type="checkbox"
+                                  checked={clientsToAdd.has(client.id)}
+                                  onChange={() => handleAddClientToggle(client.id)}
+                                  disabled={updating}
+                                />
+                                {client.first_name} {client.last_name}
+                              </label>
+                            ))}
+                          </div>
+                        </>
                       )}
                     </>
                   )}

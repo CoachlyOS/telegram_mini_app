@@ -26,13 +26,13 @@ export default function CreateGroupVisit({ professionalID }: CreateGroupVisitPro
     setSelectedSlot,
     type,
     setType,
-    subscriptions,
-    subscriptionsLoading,
-    subscriptionsError,
-    selectAll,
+    clients,
+    clientsLoading,
+    clientsError,
     selectedClients,
-    handleSelectAllChange,
+    setSelectedClients,
     handleClientChange,
+    searchClients,
     description,
     setDescription,
     createGroupVisit,
@@ -40,35 +40,32 @@ export default function CreateGroupVisit({ professionalID }: CreateGroupVisitPro
     error,
   } = useGroupVisit(professionalID)
 
+  const [clientSearch, setClientSearch] = useState('')
+
   const dates = generateAvailableDates(currentMonth)
   const today = new Date()
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
   const isCurrentMonth = currentMonth.getMonth() === today.getMonth() &&
     currentMonth.getFullYear() === today.getFullYear()
 
-  const validSubscriptions = subscriptions.filter(s => s.chat_id !== null)
-  const hasClientsSelected = selectAll || selectedClients.size > 0
-  
-  // Validation: split requires exactly 2 clients, group requires > 2 clients
+  const validClients = clients.filter(s => s.chat_id !== null)
+  const filteredClients = searchClients(clientSearch).filter(s => s.chat_id !== null)
+  const hasClientsSelected = selectedClients.size > 0
+
+  // Validation: split requires exactly 2 clients, group requires > 2 clients.
+  // "Select all" was removed — selection is always explicit now.
   const isValidClientSelection = () => {
     if (!hasClientsSelected) return false
     if (type === 'split') {
-      return selectedClients.size === 2 && !selectAll
+      return selectedClients.size === 2
     } else { // group
-      return selectAll || selectedClients.size > 2
+      return selectedClients.size > 2
     }
   }
-  
+
   const getClientValidationError = () => {
     if (!hasClientsSelected) return null
     if (type === 'split') {
-      // Don't show error if selectAll is true but selectedClients is empty (transition state)
-      if (selectAll && selectedClients.size === 0) {
-        return null
-      }
-      if (selectAll) {
-        return t('professional.createGroupVisit.description.splitCannotSelectAll')
-      }
       // Only show error if user has started selecting (at least 1 client selected)
       if (selectedClients.size > 0 && selectedClients.size < 2) {
         return t('professional.createGroupVisit.description.splitNeedTwoClients')
@@ -78,13 +75,13 @@ export default function CreateGroupVisit({ professionalID }: CreateGroupVisitPro
       }
     } else { // group
       // Only show error if user has started selecting but hasn't met the requirement
-      if (!selectAll && selectedClients.size > 0 && selectedClients.size <= 2) {
+      if (selectedClients.size > 0 && selectedClients.size <= 2) {
         return t('professional.createGroupVisit.description.groupNeedMoreThanTwoClients')
       }
     }
     return null
   }
-  
+
   const clientValidationError = getClientValidationError()
 
   // Set pre-defined description when type changes
@@ -118,14 +115,14 @@ export default function CreateGroupVisit({ professionalID }: CreateGroupVisitPro
       }
       return
     }
-    if (validSubscriptions.length > 0 && !hasClientsSelected) {
+    if (validClients.length > 0 && !hasClientsSelected) {
       const tg = (window as any).Telegram?.WebApp
       if (tg) {
         tg.showAlert(t('professional.createGroupVisit.description.selectClientsRequired'))
       }
       return
     }
-    if (validSubscriptions.length > 0 && !isValidClientSelection()) {
+    if (validClients.length > 0 && !isValidClientSelection()) {
       const tg = (window as any).Telegram?.WebApp
       if (tg) {
         tg.showAlert(clientValidationError || t('professional.createGroupVisit.description.selectClientsRequired'))
@@ -142,7 +139,7 @@ export default function CreateGroupVisit({ professionalID }: CreateGroupVisitPro
   }
 
   const canConfirm = selectedDate && selectedSlot && description.trim() &&
-    (validSubscriptions.length === 0 || isValidClientSelection())
+    (validClients.length === 0 || isValidClientSelection())
 
   return (
     <div className="gv-container">
@@ -243,9 +240,11 @@ export default function CreateGroupVisit({ professionalID }: CreateGroupVisitPro
               value={type}
               onChange={(e) => {
                 const newType = e.target.value as 'split' | 'group'
-                // If switching to split and selectAll is true, clear it immediately
-                if (newType === 'split' && selectAll) {
-                  handleSelectAllChange(false)
+                // Split allows at most 2 clients — clear the selection on the
+                // type switch so the user can re-pick a valid pair instead of
+                // keeping a >2 selection that silently can't be submitted.
+                if (newType === 'split' && selectedClients.size > 2) {
+                  setSelectedClients(new Set())
                 }
                 setType(newType)
               }}
@@ -264,43 +263,40 @@ export default function CreateGroupVisit({ professionalID }: CreateGroupVisitPro
               <Users size={16} />
               {t('professional.createGroupVisit.description.clients')}
             </label>
-            {subscriptionsLoading ? (
+            {clientsLoading ? (
               <div className="slots-status">
                 <Loader2 size={18} className="spinner" />
               </div>
-            ) : subscriptionsError ? (
+            ) : clientsError ? (
               <div className="slots-status slots-error">
                 <AlertCircle size={20} />
-                <span>{subscriptionsError}</span>
+                <span>{clientsError}</span>
               </div>
-            ) : validSubscriptions.length === 0 ? (
-              <p className="gv-empty-hint">{t('professional.createGroupVisit.description.noSubscriptions')}</p>
+            ) : validClients.length === 0 ? (
+              <p className="gv-empty-hint">{t('professional.createGroupVisit.description.noClients')}</p>
             ) : (
               <div className="gv-clients-selector">
-                {type === 'group' && (
-                  <label className="gv-checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={selectAll}
-                      onChange={(e) => handleSelectAllChange(e.target.checked)}
-                      disabled={creating}
-                    />
-                    <span>{t('professional.createGroupVisit.description.selectAll')}</span>
-                  </label>
-                )}
+                <input
+                  type="text"
+                  className="gv-search-input"
+                  value={clientSearch}
+                  onChange={(e) => setClientSearch(e.target.value)}
+                  placeholder={t('professional.createGroupVisit.description.searchClients')}
+                  disabled={creating}
+                />
                 <div className="gv-clients-list">
-                  {validSubscriptions.map((subscription) => {
-                    const isChecked = !selectAll && selectedClients.has(subscription.id)
-                    const isDisabled = creating || selectAll || (type === 'split' && !isChecked && selectedClients.size >= 2)
+                  {filteredClients.map((client) => {
+                    const isChecked = selectedClients.has(client.id)
+                    const isDisabled = creating || (type === 'split' && !isChecked && selectedClients.size >= 2)
                     return (
-                      <label key={subscription.id} className="gv-checkbox-label">
+                      <label key={client.id} className="gv-checkbox-label">
                         <input
                           type="checkbox"
                           checked={isChecked}
-                          onChange={(e) => handleClientChange(subscription.id, e.target.checked, type)}
+                          onChange={(e) => handleClientChange(client.id, e.target.checked, type)}
                           disabled={isDisabled}
                         />
-                        <span>{subscription.first_name} {subscription.last_name}</span>
+                        <span>{client.first_name} {client.last_name}</span>
                       </label>
                     )
                   })}
@@ -369,7 +365,7 @@ export default function CreateGroupVisit({ professionalID }: CreateGroupVisitPro
               <span className="summary-label">{t('professional.createGroupVisit.description.clients')}</span>
               <span className={`summary-value${hasClientsSelected ? ' filled' : ''}`}>
                 {hasClientsSelected
-                  ? <><Check size={14} className="check-icon" /> {selectAll ? t('professional.createGroupVisit.description.selectAll') : `${selectedClients.size}`}</>
+                  ? <><Check size={14} className="check-icon" /> {`${selectedClients.size}`}</>
                   : '—'}
               </span>
             </div>

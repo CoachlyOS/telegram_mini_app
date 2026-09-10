@@ -73,3 +73,11 @@ Thumbs.db
 
 # Vite
 .vite
+
+# i18n gate bookkeeping (attempt counter / pending-edit tracking)
+.gocheck/
+
+# Claude Code local-only settings & per-session context
+.claude/settings.local.json
+CLAUDE.local.md
+.context/

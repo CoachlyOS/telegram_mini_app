@@ -116,37 +116,30 @@
     },
     "professionals": {
       "title": "Тренери",
-      "tabs": {
-        "all": "Всі тренери",
-        "subscriptions": "Мої підписки"
-      },
       "all": {
         "title": "Всі тренери",
         "loading": "Завантаження тренерів...",
-        "noProfessionals": "Немає доступних тренерів",
-        "subscribe": "Підписатися",
-        "subscribing": "Підписка..."
-      },
-      "subscriptions": {
-        "title": "Мої підписки",
-        "loading": "Завантаження підписок...",
-        "noSubscriptions": "У вас поки немає підписок. Підпишіться на тренерів, щоб бачити їх тут.",
-        "unsubscribe": "Відписатися",
-        "unsubscribing": "Відписка...",
-        "error": {
-          "loadFailed": "Не вдалося завантажити підписки"
-        }
+        "noProfessionals": "Немає доступних тренерів"
       },
       "viewTimetable": "Переглянути розклад",
+      "viewInfo": "Докладніше",
       "timetable": {
         "title": "Розклад {{name}}"
+      },
+      "info": {
+        "title": "Про тренера {{name}}",
+        "biography": "Біографія",
+        "disciplines": "Дисципліни",
+        "socials": "Соціальні мережі",
+        "noInfo": "Інформація відсутня",
+        "openLink": "Відкрити"
       }
     },
     "book": {
       "title": "Записатися",
       "selectCoach": "Тренер",
       "chooseCoach": "Виберіть тренера...",
-      "noCoaches": "Немає підписок на тренерів. Спочатку підпишіться на тренера.",
+      "noCoaches": "Немає доступних тренерів.",
       "availableSlots": "Доступний час",
       "noSlots": "Немає доступного часу на цю дату",
       "confirmBooking": "Підтвердити запис"
@@ -214,7 +207,8 @@
       "timetable": "Розклад",
       "previousAppointments": "Історія записів",
       "createGroupVisit": "Створити груповий візит",
-      "packages": "Пакети"
+      "packages": "Пакети",
+      "editProfile": "Редагувати профіль"
     },
     "appointments": {
       "title": "Мої записи",
@@ -287,9 +281,9 @@
         "typeGroup": "Груповий",
         "typeSplit": "Спліт",
         "clients": "Клієнти",
-        "selectAll": "Вибрати всіх",
-        "noSubscriptions": "Немає доступних підписок",
-        "selectClientsRequired": "Будь ласка, виберіть хоча б одного клієнта або виберіть всіх",
+        "noClients": "Немає доступних клієнтів",
+        "searchClients": "Пошук клієнтів...",
+        "selectClientsRequired": "Будь ласка, виберіть хоча б одного клієнта",
         "description": "Опис групового візиту",
         "descriptionPlaceholder": "Наприклад: 'Групове тренування', 'Йога клас', 'Фітнес група'...",
         "descriptionRequired": "Будь ласка, введіть опис",
@@ -297,8 +291,7 @@
         "predefinedSplit": "Ідеальна можливість працювати з кимось у парах",
         "splitNeedTwoClients": "Спліт тренування вимагає рівно 2 клієнтів",
         "splitMaxTwoClients": "Спліт тренування дозволяє максимум 2 клієнтів",
-        "splitCannotSelectAll": "Спліт тренування не може використовувати 'Вибрати всіх'. Будь ласка, виберіть рівно 2 клієнтів",
-        "groupNeedMoreThanTwoClients": "Группове тренування вимагає більше 2 клієнтів. Виберіть мінімум 3 клієнтів або використайте 'Вибрати всіх'"
+        "groupNeedMoreThanTwoClients": "Группове тренування вимагає більше 2 клієнтів. Будь ласка, виберіть мінімум 3"
       }
     },
     "timetable": {
@@ -326,7 +319,8 @@
         "title": "Виберіть клієнта",
         "subtitle": "Виберіть клієнта, щоб переглянути його попередні записи:",
         "loading": "Завантаження клієнтів...",
-        "allClients": "Всі клієнти"
+        "allClients": "Всі клієнти",
+        "searchClients": "Пошук клієнтів..."
       },
       "byClient": {
         "title": "Історія записів",
@@ -364,7 +358,8 @@
       "noPackages": "Пакети не знайдені",
       "createPackage": "Створити пакет",
       "selectClient": "Виберіть клієнта",
-      "noClients": "Немає підписаних клієнтів",
+      "noClients": "Клієнтів не знайдено",
+      "searchClients": "Пошук клієнтів...",
       "issuedAt": "Дата видачі",
       "expiresAt": "Діє до",
       "appointmentsNumber": "Кількість занять",
@@ -383,13 +378,29 @@
       "existingClients": "Поточні клієнти",
       "willBeRemoved": "буде видалено",
       "addClients": "Додати клієнтів",
-      "noMissingClients": "Немає додаткових клієнтів для додавання",
-      "loadingMissingClients": "Завантаження доступних клієнтів...",
+      "noClientsToAdd": "Немає клієнтів для додавання",
+      "searchClients": "Пошук клієнтів...",
       "suggestedType": "Рекомендований: {{type}} ({{count}} клієнтів)",
       "typeSuggestionAccepted": "Тип буде змінено на {{type}}",
       "typeAutoUpdate": "Тип буде оновлено на: {{type}} ({{count}} клієнтів)",
       "needAtLeastOneClient": "У записі повинен бути хоча б 1 клієнт",
       "updateSuccess": "Попередній запис успішно оновлено"
+    },
+    "profile": {
+      "title": "Редагувати профіль",
+      "biography": "Біографія",
+      "biographyPlaceholder": "Розкажіть клієнтам про себе...",
+      "socials": "Соціальні мережі",
+      "socialsPlatforms": {
+        "instagram": "Instagram",
+        "telegram": "Telegram",
+        "whatsapp": "WhatsApp"
+      },
+      "disciplines": "Дисципліни",
+      "disciplinesHint": "Немає доступних дисциплін",
+      "saving": "Збереження...",
+      "saved": "Профіль успішно збережено",
+      "nothingToSave": "Нічого зберігати"
     }
   },
   "success": {
@@ -416,10 +427,16 @@
     "updateAppointmentFailed": "Не вдалося оновити запис",
     "updatePreviousAppointmentFailed": "Не вдалося оновити попередній запис",
     "loadMissingInviteUsersFailed": "Не вдалося завантажити доступних користувачів",
-    "loadMissingClientsFailed": "Не вдалося завантажити доступних клієнтів",
+    "loadInvitesFailed": "Не вдалося завантажити запрошення",
+    "loadPendingInviteUsersFailed": "Не вдалося завантажити користувачів, які очікують підтвердження",
     "loadPackagesFailed": "Не вдалося завантажити пакети",
     "createPackageFailed": "Не вдалося створити пакет",
     "loadPackageDetailsFailed": "Не вдалося завантажити деталі пакету",
-    "inviteForAppointmentFailed": "Не вдалося надіслати запрошення"
+    "inviteForAppointmentFailed": "Не вдалося надіслати запрошення",
+    "loadProfileFailed": "Не вдалося завантажити профіль",
+    "updateProfileFailed": "Не вдалося оновити профіль",
+    "invalidDisciplineId": "Один або кілька ID дисциплін не існують",
+    "localizedTextRequired": "Необхідно вказати хоча б одну мову",
+    "invalidJson": "Невірний формат JSON"
   }
 }

@@ -117,37 +117,30 @@
     },
     "professionals": {
       "title": "Trenerzy",
-      "tabs": {
-        "all": "Wszyscy trenerzy",
-        "subscriptions": "Moje subskrypcje"
-      },
       "all": {
         "title": "Wszyscy trenerzy",
         "loading": "Ładowanie trenerów...",
-        "noProfessionals": "Brak dostępnych trenerów",
-        "subscribe": "Subskrybuj",
-        "subscribing": "Subskrybowanie..."
-      },
-      "subscriptions": {
-        "title": "Moje subskrypcje",
-        "loading": "Ładowanie subskrypcji...",
-        "noSubscriptions": "Nie masz jeszcze żadnych subskrypcji. Subskrybuj trenerów, aby zobaczyć ich tutaj.",
-        "unsubscribe": "Anuluj subskrypcję",
-        "unsubscribing": "Anulowanie subskrypcji...",
-        "error": {
-          "loadFailed": "Nie udało się załadować subskrypcji"
-        }
+        "noProfessionals": "Brak dostępnych trenerów"
       },
       "viewTimetable": "Zobacz harmonogram",
+      "viewInfo": "Więcej informacji",
       "timetable": {
         "title": "Harmonogram {{name}}"
+      },
+      "info": {
+        "title": "O trenerze {{name}}",
+        "biography": "Biografia",
+        "disciplines": "Dyscypliny",
+        "socials": "Media społecznościowe",
+        "noInfo": "Brak informacji",
+        "openLink": "Otwórz"
       }
     },
     "book": {
       "title": "Umów wizytę",
       "selectCoach": "Trener",
       "chooseCoach": "Wybierz trenera...",
-      "noCoaches": "Brak subskrypcji trenerów. Najpierw zasubskrybuj trenera.",
+      "noCoaches": "Brak dostępnych trenerów.",
       "availableSlots": "Dostępne terminy",
       "noSlots": "Brak dostępnych terminów na ten dzień",
       "confirmBooking": "Potwierdź rezerwację"
@@ -215,7 +208,8 @@
       "timetable": "Harmonogram",
       "previousAppointments": "Historia wizyt",
       "createGroupVisit": "Utwórz wizytę grupową",
-      "packages": "Pakiety"
+      "packages": "Pakiety",
+      "editProfile": "Edytuj profil"
     },
     "appointments": {
       "title": "Moje wizyty",
@@ -287,9 +281,9 @@
         "typeGroup": "Grupowy",
         "typeSplit": "Split",
         "clients": "Klienci",
-        "selectAll": "Wybierz wszystkich",
-        "noSubscriptions": "Brak dostępnych subskrypcji",
-        "selectClientsRequired": "Proszę wybrać przynajmniej jednego klienta lub wybrać wszystkich",
+        "noClients": "Brak dostępnych klientów",
+        "searchClients": "Szukaj klientów...",
+        "selectClientsRequired": "Proszę wybrać przynajmniej jednego klienta",
         "description": "Opis wizyty grupowej",
         "descriptionPlaceholder": "Np. 'Trening grupowy', 'Klasa jogi', 'Grupa fitness'...",
         "descriptionRequired": "Proszę wprowadzić opis",
@@ -297,8 +291,7 @@
         "predefinedSplit": "Idealna możliwość pracy z kimś w parach",
         "splitNeedTwoClients": "Trening split wymaga dokładnie 2 klientów",
         "splitMaxTwoClients": "Trening split pozwala na maksymalnie 2 klientów",
-        "splitCannotSelectAll": "Trening split nie może używać 'Wybierz wszystkich'. Proszę wybrać dokładnie 2 klientów",
-        "groupNeedMoreThanTwoClients": "Trening grupowy wymaga więcej niż 2 klientów. Wybierz minimum 3 klientów lub użyj 'Wybierz wszystkich'"
+        "groupNeedMoreThanTwoClients": "Trening grupowy wymaga więcej niż 2 klientów. Wybierz minimum 3"
       }
     },
     "timetable": {
@@ -326,7 +319,8 @@
         "title": "Wybierz klienta",
         "subtitle": "Wybierz klienta, aby zobaczyć jego poprzednie wizyty:",
         "loading": "Ładowanie klientów...",
-        "allClients": "Wszyscy klienci"
+        "allClients": "Wszyscy klienci",
+        "searchClients": "Szukaj klientów..."
       },
       "byClient": {
         "title": "Historia wizyt",
@@ -364,7 +358,8 @@
       "noPackages": "Nie znaleziono pakietów",
       "createPackage": "Utwórz pakiet",
       "selectClient": "Wybierz klienta",
-      "noClients": "Brak subskrybowanych klientów",
+      "noClients": "Brak klientów",
+      "searchClients": "Szukaj klientów...",
       "issuedAt": "Data wystawienia",
       "expiresAt": "Ważny do",
       "appointmentsNumber": "Liczba wizyt",
@@ -383,13 +378,29 @@
       "existingClients": "Obecni klienci",
       "willBeRemoved": "zostanie usunięty",
       "addClients": "Dodaj klientów",
-      "noMissingClients": "Brak dodatkowych klientów do dodania",
-      "loadingMissingClients": "Ładowanie dostępnych klientów...",
+      "noClientsToAdd": "Brak klientów do dodania",
+      "searchClients": "Szukaj klientów...",
       "suggestedType": "Sugerowany: {{type}} ({{count}} klientów)",
       "typeSuggestionAccepted": "Typ zostanie zmieniony na {{type}}",
       "typeAutoUpdate": "Typ zostanie zaktualizowany na: {{type}} ({{count}} klientów)",
       "needAtLeastOneClient": "Wizyta musi mieć co najmniej 1 klienta",
       "updateSuccess": "Poprzednia wizyta została zaktualizowana"
+    },
+    "profile": {
+      "title": "Edytuj profil",
+      "biography": "Biografia",
+      "biographyPlaceholder": "Opowiedz klientom o sobie...",
+      "socials": "Media społecznościowe",
+      "socialsPlatforms": {
+        "instagram": "Instagram",
+        "telegram": "Telegram",
+        "whatsapp": "WhatsApp"
+      },
+      "disciplines": "Dyscypliny",
+      "disciplinesHint": "Brak dostępnych dyscyplin",
+      "saving": "Zapisywanie...",
+      "saved": "Profil zapisany pomyślnie",
+      "nothingToSave": "Nic do zapisania"
     }
   },
   "success": {
@@ -416,10 +427,16 @@
     "updateAppointmentFailed": "Nie udało się zaktualizować wizyty",
     "updatePreviousAppointmentFailed": "Nie udało się zaktualizować poprzedniej wizyty",
     "loadMissingInviteUsersFailed": "Nie udało się załadować dostępnych użytkowników",
-    "loadMissingClientsFailed": "Nie udało się załadować dostępnych klientów",
+    "loadInvitesFailed": "Nie udało się załadować zaproszeń",
+    "loadPendingInviteUsersFailed": "Nie udało się załadować użytkowników oczekujących na potwierdzenie",
     "loadPackagesFailed": "Nie udało się załadować pakietów",
     "createPackageFailed": "Nie udało się utworzyć pakietu",
     "loadPackageDetailsFailed": "Nie udało się załadować szczegółów pakietu",
-    "inviteForAppointmentFailed": "Nie udało się wysłać zaproszeń"
+    "inviteForAppointmentFailed": "Nie udało się wysłać zaproszeń",
+    "loadProfileFailed": "Nie udało się załadować profilu",
+    "updateProfileFailed": "Nie udało się zaktualizować profilu",
+    "invalidDisciplineId": "Jeden lub więcej identyfikatorów dyscyplin nie istnieje",
+    "localizedTextRequired": "Należy podać co najmniej jeden język",
+    "invalidJson": "Nieprawidłowy format JSON"
   }
 }

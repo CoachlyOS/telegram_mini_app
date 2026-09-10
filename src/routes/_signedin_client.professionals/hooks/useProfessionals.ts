@@ -2,16 +2,22 @@ import { useState, useEffect, useCallback } from 'react'
 import { apiService } from '../../../services/api'
 import i18n from '../../../i18n/config.js'
 
-declare global {
-  interface Window {
-    Telegram?: {
-      WebApp: {
-        HapticFeedback: {
-          notificationOccurred: (type: string) => void
-        }
-      }
-    }
-  }
+// Multilingual text is stored in the DB as a {<lang>: <text>} JSONB map keyed by
+// locale code. The backend does not know the requester's locale, so it returns
+// the whole map and the frontend picks the entry for the current language.
+export type LocalizedText = Record<string, string>
+
+export interface ProfessionalDiscipline {
+  id: string
+  slug: string
+  name: LocalizedText
+}
+
+export interface ProfessionalSocials {
+  telegram?: string
+  whatsapp?: string
+  instagram?: string
+  [key: string]: string | undefined
 }
 
 export interface GetProfessionalsResponseItem {
@@ -20,6 +26,22 @@ export interface GetProfessionalsResponseItem {
   last_name: string
   chat_id?: number | null
   locale: string
+  biography?: LocalizedText | null
+  socials?: ProfessionalSocials | null
+  disciplines?: ProfessionalDiscipline[]
+}
+
+// pickLocalized returns the text for the current i18n language, falling back to
+// 'en', then to the first available key, then to ''. The DB seeds disciplines
+// with only {uk,pl,ru} (no 'en') and biography with {en,pl,ru} (no 'uk'), so the
+// fallback chain must tolerate missing keys gracefully.
+export function pickLocalized(value: LocalizedText | null | undefined): string {
+  if (!value) return ''
+  const lang = i18n.language?.split('-')[0]
+  if (lang && value[lang]) return value[lang]
+  if (value.en) return value.en
+  const keys = Object.keys(value)
+  return keys.length ? value[keys[0]] : ''
 }
 
 export interface PaginationResponse {
@@ -41,8 +63,6 @@ interface UseProfessionalsResult {
   page: number
   setPage: (page: number) => void
   refetch: () => void
-  subscribingIds: Set<string>
-  handleSubscribe: (professionalID: string) => Promise<void>
 }
 
 export function useProfessionals(pageSize: number = 15, enabled: boolean = true): UseProfessionalsResult {
@@ -51,7 +71,6 @@ export function useProfessionals(pageSize: number = 15, enabled: boolean = true)
   const [pagination, setPagination] = useState<PaginationResponse | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [subscribingIds, setSubscribingIds] = useState<Set<string>>(new Set())
 
   const loadProfessionals = useCallback(async () => {
     if (!enabled) return
@@ -70,41 +89,6 @@ export function useProfessionals(pageSize: number = 15, enabled: boolean = true)
     }
   }, [page, pageSize, enabled])
 
-  const handleSubscribe = useCallback(async (professionalID: string) => {
-    setSubscribingIds(prev => new Set(prev).add(professionalID))
-    try {
-      const professional = professionals.find(p => p.id === professionalID)
-      if (!professional) {
-        throw new Error('Professional not found')
-      }
-      if (!professional.chat_id) {
-        throw new Error('Professional chat_id is missing')
-      }
-      if (!professional.locale) {
-        throw new Error('Professional locale is missing')
-      }
-      await apiService.subscribeToProfessional(professionalID, professional.chat_id, professional.locale)
-      const tg = window.Telegram?.WebApp
-      if (tg) {
-        tg.HapticFeedback.notificationOccurred('success')
-      }
-      // Reload the list after successful subscription
-      await loadProfessionals()
-    } catch (err) {
-      console.error('Failed to subscribe:', err)
-      const tg = window.Telegram?.WebApp
-      if (tg) {
-        tg.HapticFeedback.notificationOccurred('error')
-      }
-    } finally {
-      setSubscribingIds(prev => {
-        const newSet = new Set(prev)
-        newSet.delete(professionalID)
-        return newSet
-      })
-    }
-  }, [loadProfessionals, professionals])
-
   useEffect(() => {
     if (enabled) {
       loadProfessionals()
@@ -119,7 +103,5 @@ export function useProfessionals(pageSize: number = 15, enabled: boolean = true)
     page,
     setPage,
     refetch: loadProfessionals,
-    subscribingIds,
-    handleSubscribe,
   }
 }

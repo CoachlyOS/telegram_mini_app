@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useProfessionalSubscriptions } from '../hooks/useProfessionalSubscriptions'
+import { useClients } from '../../../hooks/professionals/useClients'
 import './SelectClient.css'
 
 interface SelectClientProps {
@@ -11,7 +11,8 @@ interface SelectClientProps {
 
 export default function SelectClient({ professionalID, onSelect, onCancel }: SelectClientProps) {
   const { t } = useTranslation()
-  const { subscriptions, loading, error, refetch } = useProfessionalSubscriptions()
+  const { clients, loading, error, refetch, searchClients } = useClients()
+  const [clientSearch, setClientSearch] = useState('')
 
   if (loading) {
     return (
@@ -36,6 +37,8 @@ export default function SelectClient({ professionalID, onSelect, onCancel }: Sel
     )
   }
 
+  const filteredClients = searchClients(clientSearch)
+
   return (
     <div className="container">
       <header className="header">
@@ -43,6 +46,15 @@ export default function SelectClient({ professionalID, onSelect, onCancel }: Sel
         <p className="subtitle">{t('professional.previousAppointments.selectClient.subtitle')}</p>
       </header>
       <div className="content">
+        <div className="clients-search">
+          <input
+            type="text"
+            className="client-search-input"
+            value={clientSearch}
+            onChange={(e) => setClientSearch(e.target.value)}
+            placeholder={t('professional.previousAppointments.selectClient.searchClients')}
+          />
+        </div>
         <div className="clients-list">
           <button
             className="client-button"
@@ -52,19 +64,19 @@ export default function SelectClient({ professionalID, onSelect, onCancel }: Sel
               {t('professional.previousAppointments.selectClient.allClients')}
             </div>
           </button>
-          {subscriptions.length === 0 ? (
+          {filteredClients.length === 0 ? (
             <div className="empty-state">
               <p>{t('common.noClients')}</p>
             </div>
           ) : (
-            subscriptions.map((subscription) => (
+            filteredClients.map((client) => (
               <button
-                key={subscription.id}
+                key={client.id}
                 className="client-button"
-                onClick={() => onSelect(subscription.id, `${subscription.first_name} ${subscription.last_name}`)}
+                onClick={() => onSelect(client.id, `${client.first_name} ${client.last_name}`)}
               >
                 <div className="client-name">
-                  {subscription.first_name} {subscription.last_name}
+                  {client.first_name} {client.last_name}
                 </div>
               </button>
             ))
