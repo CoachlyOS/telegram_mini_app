@@ -2,19 +2,12 @@ import { useState, useEffect, useCallback } from 'react'
 import { apiService } from '../../../services/api'
 import i18n from '../../../i18n/config.js'
 import { formatDateLocal } from '../../../utils/date'
+import { useClients, Client } from '../../../hooks/professionals/useClients'
 
 export interface AvailabilitySlot {
   start_time: string
   end_time: string
   available: boolean
-}
-
-export interface ProfessionalSubscription {
-  id: string
-  first_name: string
-  last_name: string
-  chat_id: number | null
-  locale: string
 }
 
 export interface CreateGroupVisitClient {
@@ -33,13 +26,13 @@ interface UseGroupVisitResult {
   setSelectedSlot: (slot: AvailabilitySlot | null) => void
   type: 'split' | 'group'
   setType: (type: 'split' | 'group') => void
-  subscriptions: ProfessionalSubscription[]
-  subscriptionsLoading: boolean
-  subscriptionsError: string | null
-  selectAll: boolean
+  clients: Client[]
+  clientsLoading: boolean
+  clientsError: string | null
   selectedClients: Set<string>
-  handleSelectAllChange: (checked: boolean) => void
-  handleClientChange: (subscriptionId: string, checked: boolean, type: 'split' | 'group') => void
+  setSelectedClients: (clients: Set<string>) => void
+  handleClientChange: (clientId: string, checked: boolean, type: 'split' | 'group') => void
+  searchClients: (query: string) => Client[]
   description: string
   setDescription: (desc: string) => void
   createGroupVisit: (onSuccess: () => void) => Promise<void>
@@ -57,35 +50,16 @@ export function useGroupVisit(professionalID: string): UseGroupVisitResult {
 
   const [type, setType] = useState<'split' | 'group'>('group')
 
-  const [subscriptions, setSubscriptions] = useState<ProfessionalSubscription[]>([])
-  const [subscriptionsLoading, setSubscriptionsLoading] = useState(true)
-  const [subscriptionsError, setSubscriptionsError] = useState<string | null>(null)
+  // Full client list replaces the old subscription roster. Backend removed
+  // "invite all", so selection is always explicit; the picker filters in-memory.
+  const { clients, loading: clientsLoading, error: clientsError, searchClients } = useClients()
 
-  const [selectAll, setSelectAll] = useState(false)
   const [selectedClients, setSelectedClients] = useState<Set<string>>(new Set())
 
   const [description, setDescription] = useState('')
 
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
-  // Load subscriptions on mount
-  useEffect(() => {
-    const loadSubscriptions = async () => {
-      setSubscriptionsLoading(true)
-      setSubscriptionsError(null)
-      try {
-        const response = await apiService.getProfessionalSubscriptions() as { subscriptions: ProfessionalSubscription[] }
-        setSubscriptions(response.subscriptions || [])
-      } catch (err: any) {
-        setSubscriptionsError(err.message || 'Failed to load subscriptions')
-        setSubscriptions([])
-      } finally {
-        setSubscriptionsLoading(false)
-      }
-    }
-    loadSubscriptions()
-  }, [])
 
   const setSelectedDate = useCallback((date: string | null) => {
     setSelectedDateState(date)
@@ -122,14 +96,7 @@ export function useGroupVisit(professionalID: string): UseGroupVisitResult {
     load()
   }, [professionalID, selectedDate])
 
-  const handleSelectAllChange = useCallback((checked: boolean) => {
-    setSelectAll(checked)
-    if (checked) {
-      setSelectedClients(new Set())
-    }
-  }, [])
-
-  const handleClientChange = useCallback((subscriptionId: string, checked: boolean, type: 'split' | 'group') => {
+  const handleClientChange = useCallback((clientId: string, checked: boolean, type: 'split' | 'group') => {
     if (checked) {
       // For split type, only allow 2 clients max
       if (type === 'split') {
@@ -138,21 +105,20 @@ export function useGroupVisit(professionalID: string): UseGroupVisitResult {
             return prev // Don't add if already at limit
           }
           const newSet = new Set(prev)
-          newSet.add(subscriptionId)
+          newSet.add(clientId)
           return newSet
         })
       } else {
         setSelectedClients(prev => {
           const newSet = new Set(prev)
-          newSet.add(subscriptionId)
+          newSet.add(clientId)
           return newSet
         })
       }
-      setSelectAll(false)
     } else {
       setSelectedClients(prev => {
         const newSet = new Set(prev)
-        newSet.delete(subscriptionId)
+        newSet.delete(clientId)
         return newSet
       })
     }
@@ -161,22 +127,22 @@ export function useGroupVisit(professionalID: string): UseGroupVisitResult {
   const createGroupVisit = useCallback(async (onSuccess: () => void) => {
     if (!selectedSlot || !description.trim()) return
 
-    const validSubscriptions = subscriptions.filter(s => s.chat_id !== null)
+    const validClients = clients.filter(s => s.chat_id !== null)
 
-    const clients: CreateGroupVisitClient[] = selectAll
-      ? []
-      : Array.from(selectedClients)
-          .map(id => {
-            const subscription = validSubscriptions.find(s => s.id === id)
-            if (!subscription || subscription.chat_id === null || subscription.chat_id === undefined) return null
-            if (!subscription.locale || subscription.locale.trim() === '') return null
-            return {
-              id: subscription.id,
-              chat_id: subscription.chat_id,
-              locale: subscription.locale,
-            }
-          })
-          .filter((client): client is CreateGroupVisitClient => client !== null)
+    // Backend removed "invite all"; always send an explicit client list with
+    // clients_selected: 'partially_selected'.
+    const clientsPayload: CreateGroupVisitClient[] = Array.from(selectedClients)
+      .map(id => {
+        const client = validClients.find(s => s.id === id)
+        if (!client || client.chat_id === null || client.chat_id === undefined) return null
+        if (!client.locale || client.locale.trim() === '') return null
+        return {
+          id: client.id,
+          chat_id: client.chat_id,
+          locale: client.locale,
+        }
+      })
+      .filter((client): client is CreateGroupVisitClient => client !== null)
 
     setCreating(true)
     setError(null)
@@ -187,8 +153,8 @@ export function useGroupVisit(professionalID: string): UseGroupVisitResult {
         end_at: selectedSlot.end_time,
         description: description.trim(),
         type,
-        clients_selected: selectAll ? 'all' : 'partially_selected',
-        clients,
+        clients_selected: 'partially_selected',
+        clients: clientsPayload,
       })
 
       const tg = (window as any).Telegram?.WebApp
@@ -202,7 +168,7 @@ export function useGroupVisit(professionalID: string): UseGroupVisitResult {
     } finally {
       setCreating(false)
     }
-  }, [selectedSlot, description, type, selectAll, selectedClients, subscriptions])
+  }, [selectedSlot, description, type, selectedClients, clients])
 
   return {
     selectedDate,
@@ -214,13 +180,13 @@ export function useGroupVisit(professionalID: string): UseGroupVisitResult {
     setSelectedSlot,
     type,
     setType,
-    subscriptions,
-    subscriptionsLoading,
-    subscriptionsError,
-    selectAll,
+    clients,
+    clientsLoading,
+    clientsError,
     selectedClients,
-    handleSelectAllChange,
+    setSelectedClients,
     handleClientChange,
+    searchClients,
     description,
     setDescription,
     createGroupVisit,

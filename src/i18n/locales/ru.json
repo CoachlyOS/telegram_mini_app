@@ -114,37 +114,30 @@
     },
     "professionals": {
       "title": "Тренеры",
-      "tabs": {
-        "all": "Все тренеры",
-        "subscriptions": "Мои подписки"
-      },
       "all": {
         "title": "Все тренеры",
         "loading": "Загрузка тренеров...",
-        "noProfessionals": "Нет доступных тренеров",
-        "subscribe": "Подписаться",
-        "subscribing": "Подписка..."
-      },
-      "subscriptions": {
-        "title": "Мои подписки",
-        "loading": "Загрузка подписок...",
-        "noSubscriptions": "У вас пока нет подписок. Подпишитесь на тренеров, чтобы видеть их здесь.",
-        "unsubscribe": "Отписаться",
-        "unsubscribing": "Отписка...",
-        "error": {
-          "loadFailed": "Не удалось загрузить подписки"
-        }
+        "noProfessionals": "Нет доступных тренеров"
       },
       "viewTimetable": "Посмотреть расписание",
+      "viewInfo": "Подробнее",
       "timetable": {
         "title": "Расписание {{name}}"
+      },
+      "info": {
+        "title": "О тренере {{name}}",
+        "biography": "Биография",
+        "disciplines": "Дисциплины",
+        "socials": "Социальные сети",
+        "noInfo": "Информация отсутствует",
+        "openLink": "Открыть"
       }
     },
     "book": {
       "title": "Записаться",
       "selectCoach": "Тренер",
       "chooseCoach": "Выберите тренера...",
-      "noCoaches": "Нет подписок на тренеров. Сначала подпишитесь на тренера.",
+      "noCoaches": "Нет доступных тренеров.",
       "availableSlots": "Доступное время",
       "noSlots": "Нет доступного времени на эту дату",
       "confirmBooking": "Отправить запрос"
@@ -212,7 +205,8 @@
       "timetable": "Расписание",
       "previousAppointments": "История посещений",
       "createGroupVisit": "Создать групповой визит",
-      "packages": "Пакеты"
+      "packages": "Пакеты",
+      "editProfile": "Редактировать профиль"
     },
     "appointments": {
       "title": "Мои записи",
@@ -285,9 +279,9 @@
         "typeGroup": "Групповой",
         "typeSplit": "Сплит",
         "clients": "Клиенты",
-        "selectAll": "Выбрать всех",
-        "noSubscriptions": "Нет доступных подписок",
-        "selectClientsRequired": "Пожалуйста, выберите хотя бы одного клиента или выберите всех",
+        "noClients": "Нет доступных клиентов",
+        "searchClients": "Поиск клиентов...",
+        "selectClientsRequired": "Пожалуйста, выберите хотя бы одного клиента",
         "description": "Описание группового визита",
         "descriptionPlaceholder": "Например: 'Групповая тренировка', 'Йога класс', 'Фитнес группа'...",
         "descriptionRequired": "Пожалуйста, введите описание",
@@ -295,8 +289,7 @@
         "predefinedSplit": "Идеальная возможность работать с кем-то в парах",
         "splitNeedTwoClients": "Сплит тренировка требует ровно 2 клиентов",
         "splitMaxTwoClients": "Сплит тренировка позволяет максимум 2 клиентов",
-        "splitCannotSelectAll": "Сплит тренировка не может использовать 'Выбрать всех'. Пожалуйста, выберите ровно 2 клиентов",
-        "groupNeedMoreThanTwoClients": "Групповая тренировка требует более 2 клиентов. Выберите минимум 3 клиентов или используйте 'Выбрать всех'"
+        "groupNeedMoreThanTwoClients": "Групповая тренировка требует более 2 клиентов. Пожалуйста, выберите минимум 3"
       }
     },
     "timetable": {
@@ -324,7 +317,8 @@
         "title": "Выберите клиента",
         "subtitle": "Выберите клиента, чтобы посмотреть его прошлые записи:",
         "loading": "Загрузка клиентов...",
-        "allClients": "Все клиенты"
+        "allClients": "Все клиенты",
+        "searchClients": "Поиск клиентов..."
       },
       "byClient": {
         "title": "История посещений",
@@ -362,7 +356,8 @@
       "noPackages": "Пакеты не найдены",
       "createPackage": "Создать пакет",
       "selectClient": "Выберите клиента",
-      "noClients": "Нет подписанных клиентов",
+      "noClients": "Клиентов не найдено",
+      "searchClients": "Поиск клиентов...",
       "issuedAt": "Дата выдачи",
       "expiresAt": "Действует до",
       "appointmentsNumber": "Количество занятий",
@@ -381,13 +376,29 @@
       "existingClients": "Текущие клиенты",
       "willBeRemoved": "будет удалён",
       "addClients": "Добавить клиентов",
-      "noMissingClients": "Нет дополнительных клиентов для добавления",
-      "loadingMissingClients": "Загрузка доступных клиентов...",
+      "noClientsToAdd": "Нет клиентов для добавления",
+      "searchClients": "Поиск клиентов...",
       "suggestedType": "Рекомендуемый: {{type}} ({{count}} клиентов)",
       "typeSuggestionAccepted": "Тип будет изменён на {{type}}",
       "typeAutoUpdate": "Тип будет обновлён на: {{type}} ({{count}} клиентов)",
       "needAtLeastOneClient": "В записи должен быть хотя бы 1 клиент",
       "updateSuccess": "Прошлая запись успешно обновлена"
+    },
+    "profile": {
+      "title": "Редактировать профиль",
+      "biography": "Биография",
+      "biographyPlaceholder": "Расскажите клиентам о себе...",
+      "socials": "Социальные сети",
+      "socialsPlatforms": {
+        "instagram": "Instagram",
+        "telegram": "Telegram",
+        "whatsapp": "WhatsApp"
+      },
+      "disciplines": "Дисциплины",
+      "disciplinesHint": "Нет доступных дисциплин",
+      "saving": "Сохранение...",
+      "saved": "Профиль успешно сохранён",
+      "nothingToSave": "Нечего сохранять"
     }
   },
   "success": {
@@ -414,10 +425,16 @@
     "updateAppointmentFailed": "Не удалось обновить запись",
     "updatePreviousAppointmentFailed": "Не удалось обновить прошлую запись",
     "loadMissingInviteUsersFailed": "Не удалось загрузить доступных пользователей",
-    "loadMissingClientsFailed": "Не удалось загрузить доступных клиентов",
+    "loadInvitesFailed": "Не удалось загрузить приглашения",
+    "loadPendingInviteUsersFailed": "Не удалось загрузить пользователей, ожидающих подтверждения",
     "loadPackagesFailed": "Не удалось загрузить пакеты",
     "createPackageFailed": "Не удалось создать пакет",
     "loadPackageDetailsFailed": "Не удалось загрузить детали пакета",
-    "inviteForAppointmentFailed": "Не удалось отправить приглашения"
+    "inviteForAppointmentFailed": "Не удалось отправить приглашения",
+    "loadProfileFailed": "Не удалось загрузить профиль",
+    "updateProfileFailed": "Не удалось обновить профиль",
+    "invalidDisciplineId": "Один или несколько ID дисциплин не существуют",
+    "localizedTextRequired": "Необходимо указать хотя бы один язык",
+    "invalidJson": "Неверный формат JSON"
   }
 }

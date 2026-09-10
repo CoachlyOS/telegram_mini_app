@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { apiService } from '../../../services/api'
 import i18n from '../../../i18n/config.js'
 import { formatDateLocal } from '../../../utils/date'
+import { GetProfessionalsResponse } from '../../_signedin_client.professionals/hooks/useProfessionals'
 
 export interface SubscribedProfessional {
   id: string
@@ -49,13 +50,24 @@ export function useBooking(): UseBookingResult {
   const [creating, setCreating] = useState(false)
   const [bookingError, setBookingError] = useState<string | null>(null)
 
-  // Load subscribed coaches on mount
+  // Load all coaches on mount. Subscriptions were removed, so the coach list now
+  // comes from GET /clients/professionals/all (paginated). Page through every page
+  // so the booking dropdown isn't silently truncated for clients with many coaches.
   useEffect(() => {
     const load = async () => {
       setCoachesLoading(true)
       try {
-        const data = await apiService.getSubscribedProfessionals()
-        setCoaches(data.professionals || [])
+        const all: SubscribedProfessional[] = []
+        let page = 1
+        const pageSize = 50
+        const maxPages = 100 // safety cap against an unexpected runaway loop
+        while (page <= maxPages) {
+          const data = await apiService.getProfessionals(page, pageSize) as GetProfessionalsResponse
+          all.push(...(data.professionals || []))
+          if (!data.pagination?.has_next_page) break
+          page += 1
+        }
+        setCoaches(all)
       } catch {
         setCoaches([])
       } finally {

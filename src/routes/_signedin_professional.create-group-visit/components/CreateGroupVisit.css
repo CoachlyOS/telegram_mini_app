@@ -251,6 +251,29 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
+.gv-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #2d3748;
+  background-color: #f7fafc;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.gv-search-input:focus {
+  border-color: #667eea;
+}
+
+.gv-search-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .gv-clients-list {
   display: flex;
   flex-direction: column;
@@ -584,6 +607,12 @@ body.dark .gv-container .slots-status {
 
 body.dark .gv-empty-hint {
   color: #a0aec0;
+}
+
+body.dark .gv-search-input {
+  color: #e2e8f0;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 body.dark .gv-clients-selector {

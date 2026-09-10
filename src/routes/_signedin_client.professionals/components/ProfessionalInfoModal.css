@@ -1,0 +1,140 @@
+/* Professional Info Modal */
+.professional-info-modal {
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.professional-info-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.professional-info-modal-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.professional-info-modal-body {
+  min-height: 120px;
+}
+
+.professional-info-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.professional-info-empty .empty-icon {
+  opacity: 0.5;
+}
+
+.professional-info-empty p {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+}
+
+.professional-info-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.professional-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.professional-info-section-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #667eea;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.professional-info-biography {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #4a5568;
+  white-space: pre-wrap;
+}
+
+.professional-info-disciplines {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.professional-info-socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.professional-info-social-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #4a5568;
+  background: rgba(102, 126, 234, 0.08);
+  border: 1px solid rgba(102, 126, 234, 0.18);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.professional-info-social-link:hover {
+  background: rgba(102, 126, 234, 0.15);
+  border-color: rgba(102, 126, 234, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Dark mode support */
+body.dark .professional-info-modal-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark .professional-info-modal-header h2 {
+  color: #e2e8f0;
+}
+
+body.dark .professional-info-empty p {
+  color: #a0aec0;
+}
+
+body.dark .professional-info-section-title {
+  color: #a78bfa;
+}
+
+body.dark .professional-info-biography {
+  color: #cbd5e0;
+}
+
+body.dark .professional-info-social-link {
+  color: #cbd5e0;
+  background: rgba(102, 126, 234, 0.18);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+body.dark .professional-info-social-link:hover {
+  background: rgba(102, 126, 234, 0.28);
+  border-color: rgba(102, 126, 234, 0.45);
+}

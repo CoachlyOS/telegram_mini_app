@@ -282,33 +282,40 @@ class ApiService {
     })
   }
 
-  // Subscribe to professional
-  async subscribeToProfessional(professionalID, chatID, locale) {
-    return this.request(`/clients/subscribe`, {
-      method: 'POST',
-      body: JSON.stringify({
-        professional_id: professionalID,
-        chat_id: chatID,
-        locale: locale,
-      }),
+  // Get all clients for the authenticated professional (full list, no pagination).
+  // Backend removed subscriptions; this single system-wide client list replaces the
+  // old roster endpoint. Frontend filters in-memory by first/last name as the user types.
+  // Response: { clients: [{ id, first_name, last_name, chat_id, locale }] }
+  async getClients() {
+    return this.request(`/professionals/clients`)
+  }
+
+  // Get the coach's own profile for the edit screen.
+  // Response: { biography: {lang:text}|null, socials: {platform:url}|null,
+  //   disciplines: [{ id, slug, name:{lang:text} }] }
+  async getProfessionalProfile() {
+    return this.request('/professionals/profile')
+  }
+
+  // Update the coach's own profile (partial update). Only include keys that
+  // changed — omitted keys keep the existing value (backend COALESCE).
+  //   biography: {lang:text} — ≥1 language required; null/{} are 400'd by the
+  //     backend, so the FE sends the full non-empty map or omits the key.
+  //   socials: {platform:url} — null clears the column; {} resets; omit keeps.
+  //   discipline_ids: [uuid] — [] clears all links; non-empty replaces the set;
+  //     omit leaves links unchanged.
+  // Returns 202 with no body on success (like the other professional writes).
+  async updateProfessionalProfile(input) {
+    return this.request('/professionals/profile', {
+      method: 'PATCH',
+      body: JSON.stringify(input),
     })
   }
 
-  // Unsubscribe from professional
-  async unsubscribeFromProfessional(professionalID) {
-    return this.request(`/clients/unsubscribe/${professionalID}`, {
-      method: 'DELETE',
-    })
-  }
-
-  // Get subscribed professionals with pagination
-  async getSubscribedProfessionals(page = 1, pageSize = 15) {
-    return this.request(`/clients/professionals?page=${page}&pageSize=${pageSize}`)
-  }
-
-  // Get professional subscriptions
-  async getProfessionalSubscriptions() {
-    return this.request(`/professionals/subscriptions`)
+  // Get the read-only discipline catalog for the coach's discipline picker.
+  // Response: { disciplines: [{ id, slug, name:{lang:text} }] }
+  async getDisciplines() {
+    return this.request('/professionals/disciplines')
   }
 
   // Get client invites
@@ -352,11 +359,6 @@ class ApiService {
       method: 'POST',
       body: JSON.stringify({ client: clients }),
     })
-  }
-
-  // Get missing clients for a previous appointment
-  async getMissingClientsForPreviousAppointment(appointmentID) {
-    return this.request(`/professionals/previous_appointments/${appointmentID}/missing_clients`)
   }
 
   // Update a previous appointment (add/remove clients)

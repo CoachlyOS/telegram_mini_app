@@ -119,37 +119,30 @@
     },
     "professionals": {
       "title": "Coaches",
-      "tabs": {
-        "all": "All Coaches",
-        "subscriptions": "My Subscriptions"
-      },
       "all": {
         "title": "All Coaches",
         "loading": "Loading coaches...",
-        "noProfessionals": "No available coaches",
-        "subscribe": "Subscribe",
-        "subscribing": "Subscribing..."
-      },
-      "subscriptions": {
-        "title": "My Subscriptions",
-        "loading": "Loading subscriptions...",
-        "noSubscriptions": "You don't have any subscriptions yet. Subscribe to coaches to see them here.",
-        "unsubscribe": "Unsubscribe",
-        "unsubscribing": "Unsubscribing...",
-        "error": {
-          "loadFailed": "Failed to load subscriptions"
-        }
+        "noProfessionals": "No available coaches"
       },
       "viewTimetable": "View Timetable",
+      "viewInfo": "View info",
       "timetable": {
         "title": "{{name}}'s Timetable"
+      },
+      "info": {
+        "title": "About {{name}}",
+        "biography": "Biography",
+        "disciplines": "Disciplines",
+        "socials": "Socials",
+        "noInfo": "No information available",
+        "openLink": "Open"
       }
     },
     "book": {
       "title": "Book Appointment",
       "selectCoach": "Coach",
       "chooseCoach": "Select a coach...",
-      "noCoaches": "No subscribed coaches. Subscribe to a coach first.",
+      "noCoaches": "No coaches available.",
       "availableSlots": "Available Slots",
       "noSlots": "No available slots for this date",
       "confirmBooking": "Confirm Booking"
@@ -211,7 +204,8 @@
       "timetable": "Timetable",
       "previousAppointments": "Appointments history",
       "createGroupVisit": "Create Group Visit",
-      "packages": "Packages"
+      "packages": "Packages",
+      "editProfile": "Edit Profile"
     },
     "appointments": {
       "title": "My Appointments",
@@ -283,9 +277,9 @@
         "typeGroup": "Group",
         "typeSplit": "Split",
         "clients": "Clients",
-        "selectAll": "Select All",
-        "noSubscriptions": "No subscriptions available",
-        "selectClientsRequired": "Please select at least one client or select all",
+        "noClients": "No clients available",
+        "searchClients": "Search clients...",
+        "selectClientsRequired": "Please select at least one client",
         "description": "Group visit description",
         "descriptionPlaceholder": "e.g., 'Group training session', 'Yoga class', 'Fitness group'...",
         "descriptionRequired": "Please enter description",
@@ -293,8 +287,7 @@
         "predefinedSplit": "Ideal possibility to work with someone in pairs",
         "splitNeedTwoClients": "Split training requires exactly 2 clients",
         "splitMaxTwoClients": "Split training allows maximum 2 clients",
-        "splitCannotSelectAll": "Split training cannot use 'Select All'. Please select exactly 2 clients",
-        "groupNeedMoreThanTwoClients": "Group training requires more than 2 clients. Select at least 3 clients or use 'Select All'"
+        "groupNeedMoreThanTwoClients": "Group training requires more than 2 clients. Please select at least 3"
       }
     },
     "timetable": {
@@ -322,7 +315,8 @@
         "title": "Select a client",
         "subtitle": "Select a client to view their previous appointments:",
         "loading": "Loading clients...",
-        "allClients": "All Clients"
+        "allClients": "All Clients",
+        "searchClients": "Search clients..."
       },
       "byClient": {
         "title": "Appointments history",
@@ -360,7 +354,8 @@
       "noPackages": "No packages found",
       "createPackage": "Create Package",
       "selectClient": "Select Client",
-      "noClients": "No subscribed clients found",
+      "noClients": "No clients found",
+      "searchClients": "Search clients...",
       "issuedAt": "Issued at",
       "expiresAt": "Expires at",
       "appointmentsNumber": "Number of appointments",
@@ -379,13 +374,29 @@
       "existingClients": "Current Clients",
       "willBeRemoved": "will be removed",
       "addClients": "Add Clients",
-      "noMissingClients": "No additional clients to add",
-      "loadingMissingClients": "Loading available clients...",
+      "noClientsToAdd": "No clients to add",
+      "searchClients": "Search clients...",
       "suggestedType": "Suggested: {{type}} ({{count}} clients)",
       "typeSuggestionAccepted": "Type will be changed to {{type}}",
       "typeAutoUpdate": "Type will be updated to: {{type}} ({{count}} clients)",
       "needAtLeastOneClient": "Appointment must have at least 1 client",
       "updateSuccess": "Previous appointment updated successfully"
+    },
+    "profile": {
+      "title": "Edit Profile",
+      "biography": "Biography",
+      "biographyPlaceholder": "Tell clients about yourself...",
+      "socials": "Socials",
+      "socialsPlatforms": {
+        "instagram": "Instagram",
+        "telegram": "Telegram",
+        "whatsapp": "WhatsApp"
+      },
+      "disciplines": "Disciplines",
+      "disciplinesHint": "No disciplines available",
+      "saving": "Saving...",
+      "saved": "Profile saved successfully",
+      "nothingToSave": "Nothing to save"
     }
   },
   "success": {
@@ -412,10 +423,16 @@
     "updateAppointmentFailed": "Failed to update appointment",
     "updatePreviousAppointmentFailed": "Failed to update previous appointment",
     "loadMissingInviteUsersFailed": "Failed to load available users",
-    "loadMissingClientsFailed": "Failed to load available clients",
+    "loadInvitesFailed": "Failed to load invites",
+    "loadPendingInviteUsersFailed": "Failed to load pending invite users",
     "loadPackagesFailed": "Failed to load packages",
     "createPackageFailed": "Failed to create package",
     "loadPackageDetailsFailed": "Failed to load package details",
-    "inviteForAppointmentFailed": "Failed to send invites"
+    "inviteForAppointmentFailed": "Failed to send invites",
+    "loadProfileFailed": "Failed to load profile",
+    "updateProfileFailed": "Failed to update profile",
+    "invalidDisciplineId": "One or more discipline IDs do not exist",
+    "localizedTextRequired": "At least one language must be provided",
+    "invalidJson": "Invalid JSON payload"
   }
 }

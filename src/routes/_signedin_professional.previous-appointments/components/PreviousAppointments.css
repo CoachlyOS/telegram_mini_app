@@ -1093,6 +1093,32 @@ body.dark .client-item {
   gap: 8px;
 }
 
+.modal-client-search {
+  margin-bottom: 10px;
+}
+
+.modal-client-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #2d3748;
+  background-color: #f7fafc;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.modal-client-search-input:focus {
+  border-color: #667eea;
+}
+
+.modal-client-search-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .modal-clients-selector {
   display: flex;
   flex-direction: column;
@@ -1255,6 +1281,12 @@ body.dark .edit-section-label {
 body.dark .modal-clients-selector {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.03) 100%);
   border-color: rgba(255, 255, 255, 0.08);
+}
+
+body.dark .modal-client-search-input {
+  color: #e2e8f0;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
 body.dark .modal-checkbox-label {
